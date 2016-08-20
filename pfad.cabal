@@ -17,6 +17,7 @@ library
   hs-source-dirs:      src
   exposed-modules:     Minfree
                      , Msc
+                     , Saddleback
   build-depends:       base >= 4.7 && < 5
                      , vector
   ghc-options:         -Wall
@@ -47,6 +48,17 @@ test-suite msc
   type:                exitcode-stdio-1.0
   hs-source-dirs:      test
   main-is:             MscSpec.hs
+  build-depends:       base
+                     , pfad
+                     , hspec
+                     , QuickCheck >= 2.8
+  ghc-options:         -threaded -rtsopts -with-rtsopts=-N -O2
+  default-language:    Haskell2010
+
+test-suite saddleback
+  type:                exitcode-stdio-1.0
+  hs-source-dirs:      test
+  main-is:             SaddlebackSpec.hs
   build-depends:       base
                      , pfad
                      , hspec
