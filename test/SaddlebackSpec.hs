@@ -13,8 +13,7 @@ main =
      -- using other types than Integer in the tests below will result in test failures
      -- due to overflow
      -- see f0(0 :: Int,64 :: Int) vs f0(0 :: Integer,64 :: Integer)
-     forM_ [f0,f1,f2,f3,f4]
-           run
+     forM_ [f0,f1,f2,f3,f4] run
   where run :: ((Integer,Integer) -> Integer) -> IO ()
         run f = quickCheck (property $ prop_invert f)
 
