@@ -6,7 +6,6 @@
 :set -w
 :set -isrc:dist/build/autogen
 :set -XPackageImports
-:set -XOverloadedStrings
 :set -XQuasiQuotes
 
 :set -package ghci-pretty
