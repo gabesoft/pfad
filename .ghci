@@ -1,0 +1,20 @@
+:set prompt "\ESC[1;34m%s\n\ESC[0;34mλ> \ESC[m"
+:set +t
+:set +s
+:set +c
+:set +m
+:set -w
+:set -isrc:dist/build/autogen
+:set -XPackageImports
+:set -XOverloadedStrings
+:set -XQuasiQuotes
+
+:set -package ghci-pretty
+:set -package hspec
+:set -package QuickCheck
+:set -package checkers
+
+import IPPrint.Colored
+:set -interactive-print=IPPrint.Colored.cpprint
+:def cpp (\_ -> return ":set -interactive-print=IPPrint.Colored.cpprint")
+:def ncpp (\_ -> return ":set -interactive-print=print")

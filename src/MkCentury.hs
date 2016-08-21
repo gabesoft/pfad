@@ -89,8 +89,8 @@ solutions c = map fst . filter (good c . snd) . foldr (expand c) []
 expand
   :: (Num t,Ord t)
   => t -> t -> [([[[t]]],(t,t,t,t))] -> [([[[t]]],(t,t,t,t))]
-expand c x [] = [([[[x]]],(10,x,1,0))]
-expand c x evs = concat (map (filter (ok c . snd) . glue x) evs)
+expand _ x [] = [([[[x]]],(10,x,1,0))]
+expand c x evs = concatMap (filter (ok c . snd) . glue x) evs
 
 glue
   :: Num t

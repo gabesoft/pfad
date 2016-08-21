@@ -19,6 +19,7 @@ library
                      , Msc
                      , Saddleback
                      , MkCentury
+                     , MinHeightTree
   build-depends:       base >= 4.7 && < 5
                      , vector
   ghc-options:         -Wall
@@ -71,6 +72,17 @@ test-suite mkcentury
   type:                exitcode-stdio-1.0
   hs-source-dirs:      test
   main-is:             MkCenturySpec.hs
+  build-depends:       base
+                     , pfad
+                     , hspec
+                     , QuickCheck >= 2.8
+  ghc-options:         -threaded -rtsopts -with-rtsopts=-N -O2
+  default-language:    Haskell2010
+
+test-suite minheighttree
+  type:                exitcode-stdio-1.0
+  hs-source-dirs:      test
+  main-is:             MinHeightTreeSpec.hs
   build-depends:       base
                      , pfad
                      , hspec

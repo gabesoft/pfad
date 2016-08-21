@@ -38,8 +38,7 @@ resolver: lts-6.12
 packages:
 - '.'
 # Dependency packages to be pulled from upstream that are not in the resolver
-# (e.g., acme-missiles-0.3)
-extra-deps: []
+extra-deps: ["ghci-pretty-0.0.2", "ipprint-0.6", "sr-extra-1.46.3.2"]
 
 # Override default flag values for local packages and extra-deps
 flags: {}
