@@ -48,9 +48,9 @@ allcp1 xs =
         ([n],0,0,1)
   where n = length xs
 
-done :: Eq b
+done :: (Ord b, Eq b)
      => b -> (t,t1,t2,b) -> Bool
-done k = (== k) . lst4
+done k = (>= k) . lst4
 
 lst4 :: (t,t1,t2,t3) -> t3
 lst4 (_,_,_,d) = d
@@ -62,23 +62,23 @@ allcp :: Eq a
       => [a] -> [Int]
 allcp [] = []
 allcp xs =
-  (V.toList . (V.//) (V.replicate n 0) . fst4) $
+  (reverse . fst4) $
   until (done n)
         (step xa)
-        ([(0,n)],0,0,1)
+        ([n],0,0,1)
   where n = length xs
         xa = V.fromList xs
 
 step
   :: Eq a
-  => V.Vector a -> ([(Int,Int)],Int,Int,Int) -> ([(Int,Int)],Int,Int,Int)
+  => V.Vector a -> ([Int],Int,Int,Int) -> ([Int],Int,Int,Int)
 step xa (as,i,p,k)
-  | k >= i + p = ((k,a) : as,k,a,k + 1)
-  | q /= r = ((k,min q r) : as,i,p,k + 1)
-  | q == r = ((k,b) : as,k,b,k + 1)
+  | k >= i + p = (a : as,k,a,k + 1)
+  | q /= r = (min q r : as,i,p,k + 1)
+  | otherwise = (b : as,k,b,k + 1)
   where a = llcpV xa 0 k
         b = q + llcpV xa q (q + k)
-        q = snd (as !! (i - 1))
+        q = as !! (i - 1)
         r = p - (k - i)
 
 -- | Compute the longest common sequence
