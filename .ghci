@@ -13,7 +13,12 @@
 :set -package QuickCheck
 :set -package checkers
 
-import IPPrint.Colored
+import qualified IPPrint.Colored
+import Control.Monad
+
 :set -interactive-print=IPPrint.Colored.cpprint
 :def cpp (\_ -> return ":set -interactive-print=IPPrint.Colored.cpprint")
 :def ncpp (\_ -> return ":set -interactive-print=print")
+:def hoogle (\str -> return $ ":!hoogle --count=15 \"" ++ str ++ "\"")
+:def rcpp (\_ -> return ":reload \n :cpp")
+:def lcpp (\m -> return $ ":load " ++ m ++ "\n :cpp")
