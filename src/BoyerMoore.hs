@@ -5,7 +5,8 @@ import Data.List (inits)
 
 matches0 :: Eq a
          => [a] -> [a] -> [Int]
-matches0 ws = map length . filter (endswith ws) . inits
+matches0 ws [] = []
+matches0 ws xs = map length . filter (endswith ws) . inits $ xs
 
 matches1 :: Eq a
          => [a] -> [a] -> [Int]
