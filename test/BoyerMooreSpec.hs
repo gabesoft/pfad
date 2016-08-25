@@ -11,5 +11,6 @@ main =
      quickCheck (property prop_matches)
 
 prop_matches :: Word8 -> String -> Bool
-prop_matches n xs = matches0 xs ys == matches xs ys
-  where ys = (concat . replicate (max 2 (fromIntegral n))) xs
+prop_matches n xs = matches0 zs ys == matches zs ys
+  where ys = (concat . replicate (max 2 (fromIntegral n))) zs
+        zs = take 10 xs
