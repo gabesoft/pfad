@@ -163,7 +163,7 @@ psearch
   :: Set.Set State -> [APath] -> [APath] -> Maybe [Move]
 psearch _ [] [] = Nothing
 psearch seen rs [] = psearch seen [] rs
-psearch seen rs (p@(ms,q,plan):ps)
+psearch seen rs (p@(ms,q,_):ps)
   | solved q = Just (reverse ms)
   | Set.member q seen = psearch seen rs ps
   | otherwise =
