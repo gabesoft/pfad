@@ -20,6 +20,8 @@ library
                      , BoyerMoore
                      , Bwt
                      , Dedup
+                     , Det
+                     , Hylo
                      , Kmp 
                      , MaxNonSegSum
                      , MaxTail
@@ -34,6 +36,7 @@ library
                      , array >= 0.5
                      , containers
                      , vector
+                     , random >= 1.1
   ghc-options:         -Wall
   default-language:    Haskell2010
 
