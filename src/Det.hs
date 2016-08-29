@@ -5,19 +5,19 @@ import Control.Monad (replicateM)
 import Data.Ratio
 import System.Random (randomRIO)
 
-m1 :: [[Int]]
+m1 :: [[Integer]]
 m1 = [[1 .. 3],[4 .. 6],[7 .. 9]]
 
-m2 :: [[Int]]
+m2 :: [[Integer]]
 m2 = [[-2,2,-3],[-1,1,3],[2,0,-1]]
 
-m3 :: [[Int]]
+m3 :: [[Integer]]
 m3 = [[1 .. 4],[5 .. 8],[9 .. 12],[14 .. 17]]
 
-m4 :: [[Int]]
+m4 :: [[Integer]]
 m4 = [[1 .. 4],[5 .. 8],[9 .. 12],[14 .. 17]]
 
-m5 :: [[Int]]
+m5 :: [[Integer]]
 m5 =
   [[790,-786,-12,-69,-757,-783,911,588,-375,-578]
   ,[89,-528,111,879,-194,-429,5,241,-712,-155]
@@ -79,6 +79,7 @@ det1 xss =
          else (-x)
       where x = head zs * det1 (reduce zs (yss ++ zss))
 
+reduce :: (Fractional c, Functor f) => [c] -> f [c] -> f [c]
 reduce as bss = reduce1 as <$> bss
   where reduce1 (x:xs) (y:ys) = zipWith (\a b -> b - d * a) xs ys
           where d = y / x
