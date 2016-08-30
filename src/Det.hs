@@ -126,3 +126,8 @@ det3 = det 1
               in if even (length yss)
                     then x
                     else (-x)
+
+-- | Calculates the determinant of a matrix
+det :: (Integral a,Eq a)
+    => [[a]] -> a
+det = det3
