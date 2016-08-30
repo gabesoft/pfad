@@ -3,7 +3,10 @@ module Det where
 
 import Control.Monad (replicateM)
 import Data.Ratio
-import System.Random (randomRIO)
+import System.Random (randomRIO, Random(..))
+
+m0 :: [[Integer]]
+m0 = [[1,2],[3,4]]
 
 m1 :: [[Integer]]
 m1 = [[1 .. 3],[4 .. 6],[7 .. 9]]
@@ -45,41 +48,81 @@ det0 xss = foldr1 (-) (zipWith (*) col1 (det0 <$> minors cols))
 -- | just one argument is dropped
 minors :: [t] -> [[t]]
 minors [] = []
-minors [x,y] = [[x],[y]]
-minors (x:xs) = map (x :) (minors xs) ++ [xs]
+minors (x:xs) = xs : map (x :) (minors xs)
 
 chunks :: Int -> [a] -> [[a]]
 chunks _ [] = []
 chunks n xs = take n xs : chunks n (drop n xs)
 
-randListX :: Int -> Int -> Int -> Int -> IO [Int]
+randListX :: (Num a,Random a)
+          => a -> a -> a -> Int -> IO [a]
 randListX seed l h n =
   replicateM n
              ((* seed) <$> randomRIO (l,h))
 
-randList :: Int -> IO [Int]
-randList = randListX 1 (-1000) 1000
+randList :: (Num a,Random a)
+         => Int -> IO [a]
+randList = randListX 1 (-10000) 10000
 
-matrix :: Int -> IO [[Int]]
+matrix :: (Num a,Random a)
+       => Int -> IO [[a]]
 matrix n = chunks n <$> randList (n * n)
 
-mdet :: ([[Int]] -> r) -> Int -> IO r
+mdet :: Num a
+     => ([[a]] -> a) -> Int -> IO a
 mdet det n =
-  do m <- matrix n
-     return $ det m
+  do m <- matrix n :: IO [[Integer]]
+     return $ det (fmap fromIntegral <$> m)
 
 det1 :: [[Ratio Integer]] -> Ratio Integer
 det1 [[x]] = x
 det1 xss =
   case break ((/= 0) . head) xss of
-    (yss,[]) -> 0
+    (_,[]) -> 0
     (yss,zs:zss) ->
       if even (length yss)
          then x
          else (-x)
       where x = head zs * det1 (reduce zs (yss ++ zss))
 
-reduce :: (Fractional c, Functor f) => [c] -> f [c] -> f [c]
+reduce :: (Fractional c,Functor f)
+       => [c] -> f [c] -> f [c]
 reduce as bss = reduce1 as <$> bss
-  where reduce1 (x:xs) (y:ys) = zipWith (\a b -> b - d * a) xs ys
-          where d = y / x
+  where reduce1 (x:xs) (y:ys) = zipWith (\a b -> b - (y / x) * a) xs ys
+        reduce1 _ _ = error "reduce1: invalid input"
+
+condense :: Integral a
+         => a -> [[a]] -> [[a]]
+condense k = map (map det . pair . uncurry zip) . pair
+  where pair [] = []
+        pair (x:xs) = (,) x <$> xs
+        det ((a,b),(c,d)) = (a * d - b * c) `div` k
+
+det2 :: (Integral a,Eq a)
+     => [[a]] -> a
+det2 [[x]] = x
+det2 xss =
+  case break ((/= 0) . head) xss of
+    (_,[]) -> 0
+    (yss,zs:zss) ->
+      if even (length yss)
+         then y
+         else (-y)
+      where x = det2 . condense 1 $ (zs : yss ++ zss)
+            d = head zs ^ (length xss - 2)
+            y = x `div` d
+
+det3 :: (Integral a,Eq a)
+     => [[a]] -> a
+det3 = det 1
+  where det _ [[x]] = x
+        det k xss =
+          case break ((/= 0) . head) xss of
+            (_,[]) -> 0
+            (yss,zs:zss) ->
+              let x =
+                    det (head zs)
+                        (condense k (zs : yss ++ zss))
+              in if even (length yss)
+                    then x
+                    else (-x)
