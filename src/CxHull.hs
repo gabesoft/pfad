@@ -53,6 +53,12 @@ partition vs =
 vertices :: Simplex -> [Point]
 vertices = sort . fst
 
+findSimplex0 :: [Point] -> Maybe Simplex
+findSimplex0 vs
+  | null smps = Nothing
+  | otherwise = Just (head smps)
+  where smps = simplexes vs
+
 findSimplex :: [Point] -> Maybe Simplex
 findSimplex [] = Nothing
 findSimplex (x:xs) =
@@ -76,7 +82,10 @@ degenerate :: Integral a
 degenerate k = all (== 0) . map det . submatrices k . transpose
 
 update :: [Simplex] -> Point -> [Simplex]
-update = undefined
+update smps v =
+  smps ++
+  map (newSimplex v)
+      (visible v (external smps))
 
 transpose :: [[a]] -> [[a]]
 transpose [] = []
@@ -96,3 +105,16 @@ tuples n (x:xs) = map (x :) (tuples (n - 1) xs) ++ tuples n xs
 subseqs :: [t] -> [[t]]
 subseqs [] = [[]]
 subseqs (x:xs) = map (x :) (subseqs xs) ++ subseqs xs
+
+external :: [Simplex] -> [Facet]
+external = foldr op [] . sort . concatMap facets
+  where op smp [] = [smp]
+        op smp (smp':smps)
+          | vertices smp == vertices smp' = smps
+          | otherwise = smp : smp' : smps
+
+visible :: Point -> [Facet] -> [Facet]
+visible v fs = [(us,b)|(us,b) <- fs,b * orientation (v : us) < 0]
+
+newSimplex :: Point -> Facet -> Simplex
+newSimplex v (us,b) = (v : us,-b)
