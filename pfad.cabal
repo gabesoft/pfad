@@ -28,6 +28,7 @@ library
                      , MaxTail
                      , MinHeightTree
                      , Minfree
+                     , Raarco
                      , MkCentury
                      , Msc
                      , RankTails
