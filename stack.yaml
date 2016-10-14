@@ -47,7 +47,11 @@ flags: {}
 extra-package-dbs: []
 
 # Control whether we use the GHC we find on the path
-system-ghc: false
+system-ghc: true
+
+nix:
+    enable: true
+    shell-file: stack.shell.nix
 # 
 # Require a specific version of stack, using version ranges
 # require-stack-version: -any # Default
